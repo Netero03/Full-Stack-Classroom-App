@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LogoutButton } from '../components';
 
+const backendApiUrl = import.meta.env.VITE_BACKEND_API_URL
+
 const TeacherDashboard = () => {
   const [students, setStudents] = useState([]);
   const [timetables, setTimetables] = useState([]);
@@ -21,7 +23,7 @@ const TeacherDashboard = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/users/classStudents', {
+        const res = await axios.get(`${backendApiUrl}/api/users/classStudents`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -34,7 +36,7 @@ const TeacherDashboard = () => {
 
     const fetchClassroom = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/teacher/classroom', {
+        const response = await axios.get(`${backendApiUrl}/api/teacher/classroom`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -53,7 +55,7 @@ const TeacherDashboard = () => {
 
   const fetchTimetables = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/teacher/timetables', {
+      const response = await axios.get(`${backendApiUrl}/api/teacher/timetables`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -70,7 +72,7 @@ const TeacherDashboard = () => {
 
   const handleCreate = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/teacher/timetable', form, {
+      const response = await axios.post(`${backendApiUrl}/api/teacher/timetable`, form, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -89,7 +91,7 @@ const TeacherDashboard = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/teacher/timetable/${editingTimetable._id}`, form, {
+      const response = await axios.put(`${backendApiUrl}/api/teacher/timetable/${editingTimetable._id}`, form, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -106,7 +108,7 @@ const TeacherDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/teacher/timetable/${id}`, {
+      await axios.delete(`${backendApiUrl}/api/teacher/timetable/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

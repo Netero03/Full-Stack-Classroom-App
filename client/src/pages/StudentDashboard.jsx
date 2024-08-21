@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LogoutButton } from '../components';
 
+const backendApiUrl = import.meta.env.VITE_BACKEND_API_URL
+
 const StudentDashboard = () => {
   const [classroom, setClassroom] = useState(null);
   const [students, setStudents] = useState([]);
@@ -13,11 +15,11 @@ const StudentDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const classroomResponse = await axios.get('http://localhost:5000/api/students/classroom', config);
+        const classroomResponse = await axios.get(`${backendApiUrl}/api/students/classroom`, config);
         setClassroom(classroomResponse.data.classroom);
         setStudents(classroomResponse.data.classmates);
 
-        const timetableResponse = await axios.get('http://localhost:5000/api/students/timetable', config);
+        const timetableResponse = await axios.get(`${backendApiUrl}/api/students/timetable`, config);
         setTimetable(timetableResponse.data);
       } catch (err) {
         console.error('Error fetching data:', err);

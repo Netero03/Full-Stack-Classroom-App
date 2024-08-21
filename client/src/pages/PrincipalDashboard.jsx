@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { LogoutButton } from '../components';
 
+const backendApiUrl = import.meta.env.VITE_BACKEND_API_URL
+
 const PrincipalDashboard = () => {
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
@@ -21,9 +23,9 @@ const PrincipalDashboard = () => {
         if (!token) throw new Error('No token found, user is not authenticated.');
 
         const [teacherRes, studentRes, classroomRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/users/teachers', config),
-          axios.get('http://localhost:5000/api/users/students', config),
-          axios.get('http://localhost:5000/api/classrooms', config),
+          axios.get(`${backendApiUrl}/api/users/teachers`, config),
+          axios.get(`${backendApiUrl}/api/users/students`, config),
+          axios.get(`${backendApiUrl}/api/classrooms`, config),
         ]);
 
         setTeachers(teacherRes.data);
@@ -42,8 +44,8 @@ const PrincipalDashboard = () => {
     try {
       if (!token) throw new Error('No token found, user is not authenticated.');
 
-      await axios.post('http://localhost:5000/api/classrooms', newClassroom, config);
-      const classroomRes = await axios.get('http://localhost:5000/api/classrooms', config);
+      await axios.post(`${backendApiUrl}/api/classrooms`, newClassroom, config);
+      const classroomRes = await axios.get(`${backendApiUrl}/api/classrooms`, config);
       setClassrooms(classroomRes.data);
       setNewClassroom({ name: '', startTime: '', endTime: '', days: [] });
     } catch (error) {
@@ -62,10 +64,10 @@ const PrincipalDashboard = () => {
     try {
       if (!token) throw new Error('No token found, user is not authenticated.');
 
-      await axios.post('http://localhost:5000/api/users', { ...newUser, role }, config);
+      await axios.post(`${backendApiUrl}/api/users`, { ...newUser, role }, config);
       const [teacherRes, studentRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/users/teachers', config),
-        axios.get('http://localhost:5000/api/users/students', config),
+        axios.get(`${backendApiUrl}/api/users/teachers`, config),
+        axios.get(`${backendApiUrl}/api/users/students`, config),
       ]);
       setTeachers(teacherRes.data);
       setStudents(studentRes.data);
@@ -80,7 +82,7 @@ const PrincipalDashboard = () => {
       if (!token) throw new Error('No token found, user is not authenticated.');
 
       await axios.put(url, data, config);
-      const classroomRes = await axios.get('http://localhost:5000/api/classrooms', config);
+      const classroomRes = await axios.get(`${backendApiUrl}/api/classrooms`, config);
       setClassrooms(classroomRes.data);
     } catch (error) {
       console.error('Error assigning', error);
@@ -91,11 +93,11 @@ const PrincipalDashboard = () => {
     if (!selectedClassroom || selectedStudentIds.length === 0) return;
 
     try {
-      await axios.put(`http://localhost:5000/api/principal/classrooms/${selectedClassroom}/assign-student`, { studentIds: selectedStudentIds }, config);
+      await axios.put(`${backendApiUrl}/api/principal/classrooms/${selectedClassroom}/assign-student`, { studentIds: selectedStudentIds }, config);
       setSelectedStudentIds([]); // Clear selection after assignment
 
       // Fetch the updated classroom data
-      const classroomRes = await axios.get(`http://localhost:5000/api/principal/classrooms/${selectedClassroom}`, config);
+      const classroomRes = await axios.get(`${backendApiUrl}/api/principal/classrooms/${selectedClassroom}`, config);
       setClassrooms(classroomRes.data);
     } catch (error) {
       console.error('Error assigning students', error);
@@ -108,12 +110,12 @@ const PrincipalDashboard = () => {
       if (!selectedClassroom) return;
 
       await axios.put(
-        `http://localhost:5000/api/classrooms/${selectedClassroom}/remove-teacher`,
+        `${backendApiUrl}/api/classrooms/${selectedClassroom}/remove-teacher`,
         {},
         config
       );
 
-      const classroomRes = await axios.get('http://localhost:5000/api/classrooms', config);
+      const classroomRes = await axios.get(`${backendApiUrl}/api/classrooms`, config);
       setClassrooms(classroomRes.data);
     } catch (error) {
       console.error('Error removing teacher', error);
@@ -127,14 +129,14 @@ const PrincipalDashboard = () => {
       await Promise.all(
         selectedStudentIds.map(async studentId => {
           await axios.put(
-            `http://localhost:5000/api/classrooms/${selectedClassroom}/remove-student`,
+            `${backendApiUrl}/api/classrooms/${selectedClassroom}/remove-student`,
             { studentId },
             config
           );
         })
       );
 
-      const classroomRes = await axios.get('http://localhost:5000/api/classrooms', config);
+      const classroomRes = await axios.get(`${backendApiUrl}/api/classrooms`, config);
       setClassrooms(classroomRes.data);
       setSelectedStudentIds([]); // Clear selected students after removal
     } catch (error) {
@@ -155,10 +157,10 @@ const PrincipalDashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      await axios.delete(`http://localhost:5000/api/users/${userId}`, config);
+      await axios.delete(`${backendApiUrl}/api/users/${userId}`, config);
       const [teacherRes, studentRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/users/teachers', config),
-        axios.get('http://localhost:5000/api/users/students', config),
+        axios.get(`${backendApiUrl}/api/users/teachers`, config),
+        axios.get(`${backendApiUrl}/api/users/students`, config),
       ]);
       setTeachers(teacherRes.data);
       setStudents(studentRes.data);
@@ -180,8 +182,8 @@ const PrincipalDashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       };
-      await axios.delete(`http://localhost:5000/api/classrooms/${classroomId}`, config);
-      const classroomRes = await axios.get('http://localhost:5000/api/classrooms', config);
+      await axios.delete(`${backendApiUrl}/api/classrooms/${classroomId}`, config);
+      const classroomRes = await axios.get(`${backendApiUrl}/api/classrooms`, config);
       setClassrooms(classroomRes.data);
     } catch (error) {
       console.error('Error deleting classroom', error);
@@ -334,7 +336,7 @@ const PrincipalDashboard = () => {
               <option key={teacher._id} value={teacher._id}>{teacher.name}</option>
             ))}
           </select>
-          <button onClick={() => handleAssign(`http://localhost:5000/api/classrooms/${selectedClassroom}/assign-teacher`, { teacherId: selectedTeacherId })}>Assign Teacher</button>
+          <button onClick={() => handleAssign(`${backendApiUrl}/api/classrooms/${selectedClassroom}/assign-teacher`, { teacherId: selectedTeacherId })}>Assign Teacher</button>
         </div>
 
         <div className='flex flex-col gap-5'>
