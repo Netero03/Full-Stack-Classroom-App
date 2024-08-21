@@ -12,7 +12,7 @@ A full-stack classroom management web application that allows principals, teache
 
 ## Overview
 
-The Classroom Management System is a web application designed to streamline classroom activities for principals, teachers, and students. The application allows users to manage classes, assignments, grades, and attendance, making it easier to stay organized and focused on learning.
+The Classroom Management System is a web application designed to streamline classroom activities for principals, teachers, and students. The application allows principal to manage classrooms/teachers/students and teachers to manage timetable of the assigned classroom, making it easier to stay organized and focused on learning.
 
 ## Features
 
