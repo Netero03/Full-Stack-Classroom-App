@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const User = require('../src/models/User'); // Adjust the path as needed
+require('dotenv').config();
 
 const seedData = async () => {
     try {
-        await mongoose.connect('mongodb+srv://jatinletsgo:8IOPSHkivs1yH1tM@classroom-cluster.5rrte.mongodb.net/?retryWrites=true&w=majority&appName=Classroom-Cluster');
+        await mongoose.connect(process.env.MONGO_URI);
 
         // Create Principal without manual hashing
         const principal = new User({
