@@ -17,7 +17,14 @@ require('dotenv').config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: 'https://full-stack-classroom-app.vercel.app', // Allow only your frontend domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Allow cookies to be sent
+}));
+
 app.use(express.json());
 
 // Routes
